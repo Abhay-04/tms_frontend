@@ -27,7 +27,7 @@ export default function DashboardPage() {
   console.log(tasks);
   const fetchTasks = async () => {
     try {
-      const res = await api.get("/get-task");
+      const res = await api.get("/get-task" , {withCredentials: true});
 
       setTasks(res.data);
     } catch (err) {
