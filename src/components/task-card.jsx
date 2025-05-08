@@ -89,7 +89,7 @@ const handleDelete = async (taskID) => {
   };
 
   return (
-    <Card className="w-full shadow-sm hover:shadow transition-shadow ">
+    <Card className="w-full  shadow-sm hover:shadow transition-shadow ">
       <CardHeader className="pb-2 flex flex-row items-start justify-between space-y-0">
         <div className="space-y-1">
           <div className="flex items-center gap-2">

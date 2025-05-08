@@ -20,6 +20,11 @@ const items = [
     url: "/dashboard",
     icon: Home,
   },
+  {
+    title: "My Tasks",
+    url: "/task",
+    icon: Home,
+  },
     {
     title: "Create Task",
     url: "/create-task",
