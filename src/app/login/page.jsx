@@ -34,7 +34,7 @@ export default function LoginPage() {
     setError("");
 
     try {
-      const res = await api.post("/login", { email, password });
+      const res = await api.post("/login", { email, password } , {withCredentials: true});
       const { token, user } = res.data;
 
       setAuthToken(token);
