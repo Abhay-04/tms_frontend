@@ -157,10 +157,11 @@ const handleDelete = async (taskID) => {
             <Avatar className="h-6 w-6 mr-2">
               <AvatarImage src={task.assignedTo?.avatar || "/placeholder.svg?height=24&width=24"} />
               <AvatarFallback className="text-xs">
-                {task.assignedTo ? getInitials(task.assignedTo.name) : "ME"}
+                {task.createdBy ? getInitials(task.createdBy.name) : "ME"}
               </AvatarFallback>
             </Avatar>
-            <span className="text-xs text-muted-foreground">{task.assignedTo?.name || "Assigned To Me"}</span>
+            <span className="text-xs text-muted-foreground">{`TASK CREATED BY ${task.createdBy?.name.toUpperCase()}` || "Task CREATED BY ME"}</span> <br></br>
+           
           </div>
           <div className="flex gap-1">
             <Button variant="outline" size="sm" className="h-7">

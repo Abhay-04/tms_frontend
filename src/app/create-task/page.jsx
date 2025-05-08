@@ -61,16 +61,23 @@ export default function CreateTaskForm() {
     defaultValues: {
       title: "",
       description: "",
-      dueDate: new Date(),
+      dueDate: null,
       priority: "MEDIUM",
       status: "PENDING",
-      assignedToId: "",
+      assignedToId: null,
+    
     },
   });
 
   const onSubmit = async (values) => {
     try {
-      const res = await api.post("/create-task", values);
+        const formattedValues = {
+            ...values,
+            dueDate: values.dueDate
+              ? format(new Date(values.dueDate), "dd-MM-yyyy")
+              : null,
+          };
+      const res = await api.post("/create-task", formattedValues);
 
       if (!res.ok) throw new Error("Failed to create task");
 
@@ -82,7 +89,7 @@ export default function CreateTaskForm() {
   };
 
   return (
-    <Card className="w-full flex justify-center mx-auto shadow">
+    <Card className="w-full sm:w-[70vw] mx-4 sm:mx-20 shadow">
       <CardHeader>
         <CardTitle>Create Task</CardTitle>
       </CardHeader>
@@ -160,19 +167,20 @@ export default function CreateTaskForm() {
               />
 
               {/* Priority */}
-              <FormField
+              <FormField  
                 control={form.control}
                 name="priority"
                 render={({ field }) => (
-                  <FormItem>
+                  <FormItem >
                     <FormLabel>Priority</FormLabel>
                     <Select
+                   
                       onValueChange={field.onChange}
                       defaultValue={field.value}
                     >
                       <FormControl>
                         <SelectTrigger>
-                          <SelectValue placeholder="Select priority" />
+                          <SelectValue placeholder="Select priority"  />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
