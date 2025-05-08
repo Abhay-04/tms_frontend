@@ -20,8 +20,8 @@ import { setAuthToken } from "@/lib/auth";
 import Cookies from "js-cookie";
 
 export default function LoginPage() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("abhay@gmail.com");
+  const [password, setPassword] = useState("Abhay@123");
   const [name, setName] = useState("");
   const [isLoginPage, setIsLoginPage] = useState(true);
   const [error, setError] = useState("");
