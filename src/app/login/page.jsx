@@ -1,6 +1,9 @@
-"use client";
+'use client'
 
 import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import { setUser, clearUser } from "@/lib/userSlice";
+import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -12,7 +15,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-import { redirect } from "next/navigation";
 import api from "@/lib/api";
 import { setAuthToken } from "@/lib/auth";
 import Cookies from "js-cookie";
@@ -24,14 +26,20 @@ export default function LoginPage() {
   const [isLoginPage, setIsLoginPage] = useState(true);
   const [error, setError] = useState("");
 
+  const dispatch = useDispatch();
+  const router = useRouter();
+
   const handleLogin = async (e) => {
     e.preventDefault();
     setError("");
 
     try {
       const res = await api.post("/login", { email, password });
-      const { token } = res.data;
+      const { token, user } = res.data;
+
       setAuthToken(token);
+      dispatch(setUser(user)); // ✅ store user in redux
+      router.push("/dashboard");
     } catch (err) {
       setError(err.response?.data?.error || "Login failed");
     }
@@ -43,8 +51,10 @@ export default function LoginPage() {
 
     try {
       const res = await api.post("/signup", { name, email, password });
-      const { token } = res.data;
+      const { user } = res.data;
+
       setAuthToken(token);
+      dispatch(setUser(user)); // ✅ store user in redux
       router.push("/dashboard");
     } catch (err) {
       setError(err.response?.data?.error || "Signup failed");
@@ -52,14 +62,14 @@ export default function LoginPage() {
   };
 
   useEffect(() => {
-    // const token = Cookies.get("token");
-    // if (token) {
-    //   router.push("/dashboard"); // client-side redirect
-    // }
+    const token = Cookies.get("token");
+    if (token) {
+      router.push("/dashboard");
+    }
   }, []);
 
   return (
-    <div className="max-w-md mx-auto mt-20 space-y-6 p-6 ">
+    <div className="max-w-md mx-auto b mt-20 space-y-6 p-6 ">
       <Card>
         <CardHeader>
           <CardTitle className="text-2xl">
@@ -76,13 +86,13 @@ export default function LoginPage() {
             <div className="flex flex-col gap-6">
               {!isLoginPage && (
                 <div className="grid gap-2">
-                  <Label htmlFor="email">Name</Label>
+                  <Label htmlFor="name">Name</Label>
                   <Input
                     id="name"
-                    type="name"
+                    type="text"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    placeholder="Michale Scott"
+                    placeholder="Michael Scott"
                     required
                   />
                 </div>
@@ -129,12 +139,13 @@ export default function LoginPage() {
             </div>
             <div className="mt-4 text-center text-sm">
               {isLoginPage
-                ? "Don't have an account ?"
-                : "Already have an account ? "}{" "}
+                ? "Don't have an account?"
+                : "Already have an account?"}{" "}
               <button
                 onClick={() => {
                   setIsLoginPage(!isLoginPage);
                 }}
+                type="button"
                 className="underline underline-offset-4 cursor-pointer font-semibold"
               >
                 {isLoginPage ? "Sign up" : "Login"}
