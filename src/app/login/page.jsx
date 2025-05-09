@@ -1,4 +1,4 @@
-'use client'
+"use client"
 
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
@@ -26,6 +26,7 @@ export default function LoginPage() {
   const [isLoginPage, setIsLoginPage] = useState(true);
   const [error, setError] = useState("");
 
+  console.log(error);
   const dispatch = useDispatch();
   const router = useRouter();
 
@@ -34,14 +35,17 @@ export default function LoginPage() {
     setError("");
 
     try {
-      const res = await api.post("/login", { email, password } , {withCredentials: true});
-      const { token, user } = res.data;
+      const res = await api.post(
+        "/login",
+        { email, password },
+        { withCredentials: true }
+      );
+      const { user } = res.data;
 
-      // setAuthToken(token);
       dispatch(setUser(user)); // ✅ store user in redux
       router.push("/dashboard");
     } catch (err) {
-      setError(err.response?.data?.error || "Login failed");
+      setError(err?.response?.data?.error || "Login failed");
     }
   };
 
@@ -50,14 +54,18 @@ export default function LoginPage() {
     setError("");
 
     try {
-      const res = await api.post("/signup", { name, email, password } , {withCredentials: true});
-      const { user } = res.data;
+      const res = await api.post(
+        "/signup",
+        { name, email, password },
+        { withCredentials: true }
+      );
 
-      // setAuthToken(token);
+      const user = res.data;
+
       dispatch(setUser(user)); // ✅ store user in redux
       router.push("/dashboard");
     } catch (err) {
-      setError(err.response?.data?.error || "Signup failed");
+      setError(err.message || "Signup failed");
     }
   };
 
@@ -128,6 +136,7 @@ export default function LoginPage() {
                   required
                 />
               </div>
+              <span className="text-red-400">{error}</span>
               <Button type="submit" className="w-full cursor-pointer">
                 {isLoginPage ? "Login" : "Sign up"}
               </Button>

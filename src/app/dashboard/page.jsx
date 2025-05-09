@@ -4,9 +4,11 @@ import { useEffect, useState } from "react";
 import api from "@/lib/api";
 import { TaskCard } from "@/components/task-card";
 
+
 export default function DashboardPage() {
   const [data, setData] = useState({ assignedTasks: [], createdTasks: [], overdueTasks: [] });
   const [error, setError] = useState("");
+ 
 
   useEffect(() => {
     const fetchDashboardTasks = async () => {
@@ -20,6 +22,8 @@ export default function DashboardPage() {
 
     fetchDashboardTasks();
   }, []);
+
+
 
   const { assignedTasks, createdTasks, overdueTasks } = data;
 
