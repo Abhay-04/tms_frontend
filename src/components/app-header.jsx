@@ -74,10 +74,10 @@ export function NotificationsDropdown() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon" className="relative">
+        <Button variant="ghost" size="icon" className="relative cursor-pointer">
           <Bell className="h-5 w-5" />
           {notifications.length > 0 && (
-            <span className="absolute -right-0.5 -top-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-destructive text-[10px] font-medium text-destructive-foreground">
+            <span className="absolute  -right-0.5 -top-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-destructive text-[10px] font-medium text-destructive-foreground">
               {notifications.filter((n) => !n.read).length}
             </span>
           )}
@@ -153,7 +153,7 @@ function UserDropdown() {
         <Button
           variant="ghost"
           size="icon"
-          className="relative h-8 w-8 rounded-full"
+          className="relative h-8 w-8 rounded-full cursor-pointer"
         >
           <Avatar className="h-8 w-8">
             <AvatarImage
@@ -169,18 +169,18 @@ function UserDropdown() {
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <DropdownMenuItem>
-            <User className="mr-2 h-4 w-4" />
-            <span>Profile</span>
+            <User className="mr-2 h-4 w-4 " />
+            <span className="cursor-pointer">Profile</span>
           </DropdownMenuItem>
           <DropdownMenuItem>
             <Settings className="mr-2 h-4 w-4" />
-            <span>Settings</span>
+            <span className="cursor-pointer">Settings</span>
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={handleLogout}>
           <LogOut className="mr-2 h-4 w-4" />
-          <span>Log out</span>
+          <span className="cursor-pointer">Log out</span>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

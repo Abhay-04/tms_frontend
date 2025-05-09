@@ -129,6 +129,17 @@ export function TaskCard({ task }) {
     }
   };
 
+  const updateTaskStatus = async (newStatus) => {
+  try {
+    await api.put(`/update/${task.id}`, { status: newStatus });
+    // Optional: refresh the task list or update local state
+    console.log("Status updated to", newStatus);
+  } catch (err) {
+    console.error("Failed to update status", err);
+  }
+};
+
+
   return (
     <Card className="w-full  shadow-sm hover:shadow transition-shadow ">
       <CardHeader className="pb-2 flex flex-row items-start justify-between space-y-0">
@@ -173,8 +184,8 @@ export function TaskCard({ task }) {
         </div>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <MoreHorizontal className="h-4 w-4" />
+            <Button variant="ghost" className="h-8 w-8 p-0 cursor-pointer">
+              <MoreHorizontal className="h-4 w-4 " />
               <span className="sr-only">Open menu</span>
             </Button>
           </DropdownMenuTrigger>
@@ -182,7 +193,7 @@ export function TaskCard({ task }) {
             <Dialog open={editOpen} onOpenChange={setEditOpen}>
               <DialogTrigger asChild>
                 <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-                  <Edit className="mr-2 h-4 w-4" />
+                  <Edit className="mr-2 h-4 w-4 " />
                   Edit Task
                 </DropdownMenuItem>
               </DialogTrigger>
@@ -200,7 +211,7 @@ export function TaskCard({ task }) {
                       }
                     />
                   </div>
-                  <div className="flex flex-col gap-2">
+                  <div className="flex flex-col gap-2 ">
                     <Label>Description</Label>
                     <Textarea
                       value={editedTask.description}
@@ -222,7 +233,7 @@ export function TaskCard({ task }) {
                           priority: e.target.value,
                         })
                       }
-                      className="border px-2 py-1 rounded"
+                      className="border px-2 py-1 rounded cursor-pointer"
                     >
                       <option value="">All Priorities</option>
                       <option value="LOW">Low</option>
@@ -236,7 +247,7 @@ export function TaskCard({ task }) {
                       value={editedTask.status}
                       onChange={(e) => setEditedTask({...editedTask,
                         status: e.target.value,})}
-                      className="border px-2 py-1 rounded"
+                      className="border px-2 py-1 rounded cursor-pointer"
                     >
                       <option value="">All Status</option>
                       <option value="PENDING">Pending</option>
@@ -245,8 +256,8 @@ export function TaskCard({ task }) {
                     </select>
                   </div>
                 </div>
-                <DialogFooter className="pt-4">
-                  <Button onClick={handleUpdate}>Save Changes</Button>
+                <DialogFooter className="pt-4 ">
+                  <Button className="cursor-pointer" onClick={handleUpdate}>Save Changes</Button>
                 </DialogFooter>
               </DialogContent>
             </Dialog>
@@ -300,7 +311,7 @@ export function TaskCard({ task }) {
             <br></br>
           </div>
           <div className="flex gap-1">
-            <Button variant="outline" size="sm" className="h-7">
+            <Button  onClick={() => updateTaskStatus("COMPLETED")} variant="outline" size="sm" className="h-7">
               <CheckCircle2 className="mr-1 h-3 w-3" />
               Mark Complete
             </Button>

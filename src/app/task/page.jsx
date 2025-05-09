@@ -58,19 +58,19 @@ export default function DashboardPage() {
   return (
     <div className="p-4">
       <h1 className="text-xl font-bold mb-4">MY TASKS</h1>
-      <div className="mb-4 flex flex-wrap gap-4">
+      <div className="mb-4 flex flex-wrap gap-4 ">
         <input
           type="text"
           placeholder="Search by title or description"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="border px-2 py-1 rounded w-64"
+          className="border px-2 py-1 rounded w-64 cursor-pointer"
         />
 
         <select
           value={statusFilter}
           onChange={(e) => setStatusFilter(e.target.value)}
-          className="border px-2 py-1 rounded"
+          className="border px-2 py-1 rounded cursor-pointer"
         >
           <option value="">All Status</option>
           <option value="PENDING">Pending</option>
@@ -81,7 +81,7 @@ export default function DashboardPage() {
         <select
           value={priorityFilter}
           onChange={(e) => setPriorityFilter(e.target.value)}
-          className="border px-2 py-1 rounded"
+          className="border px-2 py-1 rounded cursor-pointer"
         >
           <option value="">All Priorities</option>
           <option value="LOW">Low</option>
@@ -93,7 +93,7 @@ export default function DashboardPage() {
           <PopoverTrigger asChild>
             <Button
               variant="outline"
-              className="w-[200px] justify-start text-left font-normal"
+              className="w-[200px] justify-start text-left font-normal cursor-pointer"
             >
               {dueDateFilter ? (
                 format(new Date(dueDateFilter), "dd-MM-yyyy")

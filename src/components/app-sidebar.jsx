@@ -21,15 +21,16 @@ import {
 // Menu items.
 const items = [
   {
-    title: "My Tasks",
-    url: "/task",
-    icon: Inbox,
-  },
-  {
     title: "Dashboard",
     url: "/dashboard",
     icon: Home,
   },
+  {
+    title: "My Tasks",
+    url: "/task",
+    icon: Inbox,
+  },
+  
   {
     title: "Create Task",
     url: "/create-task",

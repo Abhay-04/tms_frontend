@@ -43,7 +43,7 @@ export default function LoginPage() {
       const { user } = res.data;
 
       dispatch(setUser(user)); // ✅ store user in redux
-      router.push("/dashboard");
+      router.push("/task");
     } catch (err) {
       setError(err?.response?.data?.error || "Login failed");
     }
@@ -63,7 +63,7 @@ export default function LoginPage() {
       const user = res.data;
 
       dispatch(setUser(user)); // ✅ store user in redux
-      router.push("/dashboard");
+      router.push("/task");
     } catch (err) {
       setError(err.message || "Signup failed");
     }
@@ -141,7 +141,7 @@ export default function LoginPage() {
                 {isLoginPage ? "Login" : "Sign up"}
               </Button>
               {isLoginPage && (
-                <Button variant="outline" className="w-full">
+                <Button variant="outline" className="w-full cursor-pointer">
                   Login with Google
                 </Button>
               )}
