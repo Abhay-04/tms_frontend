@@ -37,7 +37,7 @@ export default function LoginPage() {
       const res = await api.post("/login", { email, password } , {withCredentials: true});
       const { token, user } = res.data;
 
-      setAuthToken(token);
+      // setAuthToken(token);
       dispatch(setUser(user)); // ✅ store user in redux
       router.push("/dashboard");
     } catch (err) {
@@ -50,10 +50,10 @@ export default function LoginPage() {
     setError("");
 
     try {
-      const res = await api.post("/signup", { name, email, password });
+      const res = await api.post("/signup", { name, email, password } , {withCredentials: true});
       const { user } = res.data;
 
-      setAuthToken(token);
+      // setAuthToken(token);
       dispatch(setUser(user)); // ✅ store user in redux
       router.push("/dashboard");
     } catch (err) {

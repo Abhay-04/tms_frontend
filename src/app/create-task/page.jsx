@@ -77,7 +77,7 @@ export default function CreateTaskForm() {
               ? format(new Date(values.dueDate), "dd-MM-yyyy")
               : null,
           };
-      const res = await api.post("/create-task", formattedValues);
+      const res = await api.post("/create-task", formattedValues , {withCredentials: true});
 
       if (!res.ok) throw new Error("Failed to create task");
 

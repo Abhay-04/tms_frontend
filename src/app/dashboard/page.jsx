@@ -11,7 +11,7 @@ export default function DashboardPage() {
   useEffect(() => {
     const fetchDashboardTasks = async () => {
       try {
-        const res = await api.get("/dashboard-tasks");
+        const res = await api.get("/dashboard-tasks" , {withCredentials: true});
         setData(res.data);
       } catch (err) {
         setError(err.response?.data?.error || "Failed to load dashboard");
