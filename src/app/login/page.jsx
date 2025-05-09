@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
@@ -18,6 +18,7 @@ import {
 import api from "@/lib/api";
 import { setAuthToken } from "@/lib/auth";
 import Cookies from "js-cookie";
+import { toast } from "sonner";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("abhay@gmail.com");
@@ -41,11 +42,11 @@ export default function LoginPage() {
         { withCredentials: true }
       );
       const { user } = res.data;
-
+      toast.success("🎉 Login success! ");
       dispatch(setUser(user)); // ✅ store user in redux
       router.push("/task");
     } catch (err) {
-      setError(err?.response?.data?.error || "Login failed");
+      toast.error(err.response.data.error || "Login failed");
     }
   };
 
@@ -61,11 +62,11 @@ export default function LoginPage() {
       );
 
       const user = res.data;
-
+      toast.success("🎉 User created ! ");
       dispatch(setUser(user)); // ✅ store user in redux
       router.push("/task");
     } catch (err) {
-      setError(err.message || "Signup failed");
+      toast.error("Email is already present!");
     }
   };
 

@@ -132,7 +132,7 @@ export default function DashboardPage() {
       {filteredTasks.length > 0 ? (
         <div className="space-y-4 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 ">
           {filteredTasks.map((task) => (
-            <TaskCard key={task.id} task={task} />
+            <TaskCard key={task.id} task={task} refreshTasks={fetchTasks} />
           ))}
         </div>
       ) : (

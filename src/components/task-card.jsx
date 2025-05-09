@@ -41,8 +41,9 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Progress } from "@/components/ui/progress";
 import api from "@/lib/api";
+import { toast } from "sonner";
 
-export function TaskCard({ task }) {
+export function TaskCard({ task, refreshTasks }) {
   const [expanded, setExpanded] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
   const [editedTask, setEditedTask] = useState({
@@ -110,11 +111,12 @@ export function TaskCard({ task }) {
   const handleDelete = async (taskID) => {
     try {
       await api.delete(`/delete/${taskID}`);
-      console.log("Task deleted");
 
-      // Optionally refresh list or update Redux state here
+      toast.success("Task deleted");
+
+      refreshTasks();
     } catch (err) {
-      console.error("Error deleting task:", err);
+      toast.error(err.response.data.error);
       // Optional: show error to user
     }
   };
@@ -123,22 +125,24 @@ export function TaskCard({ task }) {
     try {
       await api.put(`/update/${task.id}`, editedTask);
       setEditOpen(false);
-      // Optional: trigger parent fetch or local state update
+      toast.success("Task Updated");
+      refreshTasks();
     } catch (err) {
-      console.error("Failed to update task", err);
+      toast.error(err.response.data.error);
     }
   };
 
   const updateTaskStatus = async (newStatus) => {
-  try {
-    await api.put(`/update/${task.id}`, { status: newStatus });
-    // Optional: refresh the task list or update local state
-    console.log("Status updated to", newStatus);
-  } catch (err) {
-    console.error("Failed to update status", err);
-  }
-};
+    try {
+      await api.put(`/update/${task.id}`, { status: newStatus });
+      // Optional: refresh the task list or update local state
 
+      toast.success("Task Updated");
+      refreshTasks();
+    } catch (err) {
+      toast.error(err.response.data.error);
+    }
+  };
 
   return (
     <Card className="w-full  shadow-sm hover:shadow transition-shadow ">
@@ -245,8 +249,9 @@ export function TaskCard({ task }) {
                     <Label>Priority</Label>
                     <select
                       value={editedTask.status}
-                      onChange={(e) => setEditedTask({...editedTask,
-                        status: e.target.value,})}
+                      onChange={(e) =>
+                        setEditedTask({ ...editedTask, status: e.target.value })
+                      }
                       className="border px-2 py-1 rounded cursor-pointer"
                     >
                       <option value="">All Status</option>
@@ -257,7 +262,9 @@ export function TaskCard({ task }) {
                   </div>
                 </div>
                 <DialogFooter className="pt-4 ">
-                  <Button className="cursor-pointer" onClick={handleUpdate}>Save Changes</Button>
+                  <Button className="cursor-pointer" onClick={handleUpdate}>
+                    Save Changes
+                  </Button>
                 </DialogFooter>
               </DialogContent>
             </Dialog>
@@ -301,18 +308,26 @@ export function TaskCard({ task }) {
                 }
               />
               <AvatarFallback className="text-xs">
-                {task.createdBy ? getInitials(task.createdBy.name) : "ME"}
+                {task.assignedTo ? getInitials(task.assignedTo.name) : "ME"}
               </AvatarFallback>
             </Avatar>
             <span className="text-xs text-muted-foreground">
-              {`TASK CREATED BY ${task.createdBy?.name.toUpperCase()}` ||
-                "Task CREATED BY ME"}
+              {` ${
+                task.assignedTo
+                  ? `TASK ASSIGNED TO ${task.assignedTo?.name.toUpperCase()}`
+                  : "Task CREATED BY ME"
+              }`}
             </span>{" "}
             <br></br>
           </div>
-          <div className="flex gap-1">
-            <Button  onClick={() => updateTaskStatus("COMPLETED")} variant="outline" size="sm" className="h-7">
-              <CheckCircle2 className="mr-1 h-3 w-3" />
+          <div className="flex gap-1 place-items-end">
+            <Button
+              onClick={() => updateTaskStatus("COMPLETED")}
+              variant="outline"
+              size="sm"
+              className="h-7 cursor-pointer"
+            >
+              <CheckCircle2 className="mr-1 h-3 w-3 r" />
               Mark Complete
             </Button>
           </div>

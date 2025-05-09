@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -52,7 +52,7 @@ const formSchema = z.object({
   dueDate: z.date({ required_error: "Due date is required" }),
   priority: z.enum(["LOW", "MEDIUM", "HIGH"]),
   status: z.enum(["PENDING", "IN_PROGRESS", "COMPLETED"]),
-  assignedToId: z.string().optional(),
+  assignedToId: z.string().optional().nullable(),
 });
 
 export default function CreateTaskForm() {
@@ -64,32 +64,51 @@ export default function CreateTaskForm() {
       dueDate: null,
       priority: "MEDIUM",
       status: "PENDING",
-      assignedToId: null,
-    
+      assignedToId: "",
     },
   });
 
   const onSubmit = async (values) => {
     try {
-        const formattedValues = {
-            ...values,
-            dueDate: values.dueDate
-              ? format(new Date(values.dueDate), "dd-MM-yyyy")
-              : null,
-          };
-      const res = await api.post("/create-task", formattedValues , {withCredentials: true});
+      const formattedValues = {
+        ...values,
+        dueDate: values.dueDate
+          ? format(new Date(values.dueDate), "dd-MM-yyyy")
+          : null,
+        assignedToId:
+          values.assignedToId?.trim() === "" ? null : values.assignedToId,
+      };
+      const res = await api.post("/create-task", formattedValues, {
+        withCredentials: true,
+      });
 
-      if (!res.ok) throw new Error("Failed to create task");
+     
 
       toast.success("Task created successfully");
       form.reset();
     } catch (err) {
+      console.log(err);
       toast.error("Error creating task");
     }
   };
 
+  const [users, setUsers] = useState([]);
+
+  useEffect(() => {
+  const fetchUsers = async () => {
+    try {
+      const res = await api.get("/users", { withCredentials: true });
+      setUsers(res.data);
+    } catch (err) {
+   
+      toast.error("Failed to load users");
+    }
+  };
+
+  fetchUsers();
+}, []);
   return (
-    <Card className="w-full sm:w-[70vw] mx-4 sm:mx-20 shadow">
+    <Card className="w-[90vw]  sm:w-[60vw] mx-4 sm:mx-20 shadow">
       <CardHeader>
         <CardTitle>Create Task</CardTitle>
       </CardHeader>
@@ -167,20 +186,19 @@ export default function CreateTaskForm() {
               />
 
               {/* Priority */}
-              <FormField  
+              <FormField
                 control={form.control}
                 name="priority"
                 render={({ field }) => (
-                  <FormItem >
+                  <FormItem>
                     <FormLabel>Priority</FormLabel>
                     <Select
-                   
                       onValueChange={field.onChange}
                       defaultValue={field.value}
                     >
                       <FormControl>
                         <SelectTrigger>
-                          <SelectValue placeholder="Select priority"  />
+                          <SelectValue placeholder="Select priority" />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
@@ -233,10 +251,21 @@ export default function CreateTaskForm() {
                 name="assignedToId"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Assign To (User ID)</FormLabel>
-                    <FormControl>
-                      <Input placeholder="User ID" {...field} />
-                    </FormControl>
+                    <FormLabel>Assign To</FormLabel>
+                    <Select onValueChange={field.onChange} value={field.value}>
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select user" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {users.map((user) => (
+                          <SelectItem key={user.id} value={user.id}>
+                            {user.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -244,7 +273,7 @@ export default function CreateTaskForm() {
             </div>
 
             <CardFooter className="px-0 pt-6">
-              <Button type="submit" className="w-full">
+              <Button type="submit" className="w-full cursor-pointer">
                 Create Task
               </Button>
             </CardFooter>

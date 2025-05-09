@@ -4,26 +4,26 @@ import { useEffect, useState } from "react";
 import api from "@/lib/api";
 import { TaskCard } from "@/components/task-card";
 
-
 export default function DashboardPage() {
-  const [data, setData] = useState({ assignedTasks: [], createdTasks: [], overdueTasks: [] });
+  const [data, setData] = useState({
+    assignedTasks: [],
+    createdTasks: [],
+    overdueTasks: [],
+  });
   const [error, setError] = useState("");
- 
+
+  const fetchDashboardTasks = async () => {
+    try {
+      const res = await api.get("/dashboard-tasks", { withCredentials: true });
+      setData(res.data);
+    } catch (err) {
+      setError(err.response?.data?.error || "Failed to load dashboard");
+    }
+  };
 
   useEffect(() => {
-    const fetchDashboardTasks = async () => {
-      try {
-        const res = await api.get("/dashboard-tasks" , {withCredentials: true});
-        setData(res.data);
-      } catch (err) {
-        setError(err.response?.data?.error || "Failed to load dashboard");
-      }
-    };
-
     fetchDashboardTasks();
   }, []);
-
-
 
   const { assignedTasks, createdTasks, overdueTasks } = data;
 
@@ -33,21 +33,39 @@ export default function DashboardPage() {
 
       {error && <p className="text-red-500">{error}</p>}
 
-      <TaskSection title="Tasks Assigned To Me" tasks={assignedTasks} />
-      <TaskSection title="Tasks Created by me" tasks={createdTasks} />
-      <TaskSection title="Overdue Tasks" tasks={overdueTasks} highlightOverdue />
+      <TaskSection
+        title="Tasks Assigned To Me"
+        tasks={assignedTasks}
+        refreshTasks={fetchDashboardTasks}
+      />
+      <TaskSection
+        title="Tasks Created by me"
+        tasks={createdTasks}
+        refreshTasks={fetchDashboardTasks}
+      />
+      <TaskSection
+        title="Overdue Tasks"
+        tasks={overdueTasks}
+        highlightOverdue
+        refreshTasks={fetchDashboardTasks}
+      />
     </div>
   );
 }
 
-function TaskSection({ title, tasks, highlightOverdue }) {
+function TaskSection({ title, tasks, highlightOverdue, refreshTasks }) {
   return (
     <div>
       <h2 className="text-xl font-semibold mb-2">{title}</h2>
       {tasks.length > 0 ? (
         <div className="space-y-4 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 ">
           {tasks.map((task) => (
-            <TaskCard key={task.id} task={task} highlight={highlightOverdue} />
+            <TaskCard
+              key={task.id}
+              task={task}
+              highlight={highlightOverdue}
+              refreshTasks={refreshTasks}
+            />
           ))}
         </div>
       ) : (

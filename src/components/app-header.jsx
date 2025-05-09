@@ -19,6 +19,7 @@ import api from "@/lib/api";
 
 import { setNotifications } from "@/lib/notificationSlice";
 import { useEffect } from "react";
+import { toast } from "sonner";
 
 export function AppHeader() {
   const user = useSelector((state) => state.user.user);
@@ -41,9 +42,11 @@ export function AppHeader() {
         {user !== null && (
           <div className="flex flex-1 items-center justify-end space-x-4">
             <Link href="/dashboard">
-              <Button className="cursor-pointer" variant="outline">Dashboard</Button>
+              <Button className="cursor-pointer" variant="outline">
+                Dashboard
+              </Button>
             </Link>
-            <NotificationsDropdown  />
+            <NotificationsDropdown />
             <UserDropdown />
           </div>
         )}
@@ -132,11 +135,11 @@ function UserDropdown() {
 
       // Clear Redux user
       dispatch(clearUser());
-
       // Redirect to login
       router.push("/login");
+      toast.success("🎉 Logout success! ");
     } catch (error) {
-      console.error("Logout failed:", error);
+      toast.error("Logout failed:", error);
     }
   };
   const initials = user?.name

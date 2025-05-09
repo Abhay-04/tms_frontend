@@ -9,6 +9,7 @@ import { Provider } from "react-redux";
 import { store, persistor } from "@/lib/store";
 import { PersistGate } from "redux-persist/integration/react";
 import { usePathname } from "next/navigation";
+import { Toaster } from "@/components/ui/sonner";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -34,7 +35,9 @@ export default function RootLayout({ children }) {
             {hideLayout ? (
               <main>
                 <AppHeader />
-                {children}</main>
+                {children}
+                <Toaster richColors position="top-right" />
+                </main>
             ) : (
               <>
                 <AppHeader />
@@ -43,6 +46,7 @@ export default function RootLayout({ children }) {
                   <main>
                     <SidebarTrigger />
                     {children}
+                    <Toaster richColors position="top-right" />
                   </main>
                 </SidebarProvider>
               </>
